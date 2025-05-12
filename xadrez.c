@@ -1,104 +1,123 @@
-#include <stdio.h>   // Biblioteca padrão de entrada e saida
-#include <stdlib.h>  // Biblioteca pra funções utilitarias
-#include <conio.h>   // biblioteca pra getch (entrada de caracteres sem Enter)
+#include <stdio.h>
 
-// tabuleiro inicial de xadrez letras minusculas são peças pretas, maiúsculas são peças brancas
-char tabuleiro[8][8] = {
+// Função para simular o movimento da Torre (usa 'for')
+void moverTorre(int casas) {
+    printf("Movimento da Torre:\n");
+    for (int i = 1; i <= casas; i++) {
+        printf("Casa %d: Movendo para frente (linha)\n", i);
+    }
+    printf("\n");
+}
 
-    { 't', 'c', 'b', 'k', 'q', 'b', 'c', 't' }, 
-    { 'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p' }, 
-    { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }, 
-    { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }, 
-    { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }, 
-    { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' }, 
-    { 'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P' }, 
-    { 'T', 'C', 'B', 'K', 'Q', 'B', 'C', 'T' }  
+    // TORRE - Movimento Recursivo
+void moverTorreRecursivo(int passo, int max) {
+    if (passo > max) {
+        printf("\n");
+        return;
+    }
+    printf("Torre - Casa %d: Movendo para frente (linha)\n", passo);
+    moverTorreRecursivo(passo + 1, max);
+}
 
-};
+// Função para simular o movimento do Bispo (usa 'while')
+void moverBispo(int casas) {
+    printf("Movimento do Bispo:\n");
+    int i = 1;
+    while (i <= casas) {
+        printf("Casa %d: Movendo na diagonal\n", i);
+        i++;
+    }
+    printf("\n");
+}
 
-// Funcao pra exibir o tabuleiro na tela
-void exibir_tabuleiro() {
+    // BISPO - Movimento Recursivo com Loops Aninhados
+void moverBispoDiagonalRecursivo(int passo, int max) {
+    if (passo > max) {
+        printf("\n");
+        return;
+    }
 
-    int i, j;
-    char letras[] = "   A   B   C   D   E   F   G   H"; // letras das colunas
-
-    printf("\n%s\n", letras); // imprime o cabeçalho das colunas
-    for (i = 0; i < 8; i++) {
-
-        printf("  ---------------------------------\n"); // linha separadora
-        printf("%d", 8 - i);  // numeros das linhas (8 ate 1)
-
-        for (j = 0; j < 8; j++) {
-            printf("| %c ", tabuleiro[i][j]); // imprime cada peça ou espaço vazio
+    // Loops aninhados: vertical e horizontal (diagonal)
+    for (int v = 1; v <= 1; v++) {
+        for (int h = 1; h <= 1; h++) {
+            printf("Bispo - Casa %d: Movendo na diagonal (vertical %d, horizontal %d)\n", passo, v, h);
         }
-
-        printf("|\n"); // Fecha a linha do tabuleiro
-    }
-    printf("  ---------------------------------\n"); // base do tabuleiro
-}
-
-// funçao que move a peça da posição inicial para a posição final
-void mover_peca(int r1, int c1, int r2, int c2) {
-
-    char temp = tabuleiro[r1][c1];     // Armazena temporariamente a peça original
-    tabuleiro[r1][c1] = ' ';           // remove a peça da posiçao original
-    tabuleiro[r2][c2] = temp;          // Coloca a peça na nova posição
-}
-
-
-// Função que executa o turno de um jogador
-void turno_jogador(int jogador) {
-    char col1, col2;    // colunas das posições (ex: 'E')
-    int lin1, lin2;      // Linhas das posições (ex: 2, 4)
-    int c1, c2, r1, r2;  // Cordenadas convertidas para indices da matriz
-
-    printf("\nJogador %d", jogador);
-    printf("\ndigite a posicao da peca (ex: E2): ");
-    scanf(" %c%d", &col1, &lin1); 
-
-    printf("Digite a nova posicao (ex: E4): ");
-    scanf(" %c%d", &col2, &lin2); 
-
-    c1 = col1 - 'A';           // converte a letra para indice da coluna
-    c2 = col2 - 'A';
-    r1 = 8 - lin1;             // converte o numero para indice da linha
-    r2 = 8 - lin2;
-
-    // verifica se a posição de origem é valida
-    if (r1 < 0 || r1 > 7 || c1 < 0 || c1 > 7 || tabuleiro[r1][c1] == ' ') {
-        printf("Posicao invalida!\n");
-        return;
     }
 
-    // Verifica se a posição de destino é valida
-    if (r2 < 0 || r2 > 7 || c2 < 0 || c2 > 7) {
-        printf("Destino invalido!\n");
-        return;
-    }
-
-    // realiza o movimento
-    mover_peca(r1, c1, r2, c2);
+    moverBispoDiagonalRecursivo(passo + 1, max);
 }
 
-// função principal
-int main() {
-    int rodada = 1;  // controla qual rodada está
-    char tecla;      // armazena tecla pressionada
-
-    printf("\n\tBEM-VINDO AO JOGO DE XADREZ");
-    printf("\nPressione qualquer tecla para iniciar...");
-    getch(); // espera o jogador pressionar uma tecla para começar
-
+// Função para simular o movimento da Rainha (usa 'do-while')
+void moverRainha(int casas) {
+    printf("Movimento da Rainha:\n");
+    int i = 1;
     do {
-        system("cls"); // limpa a tela (no Windows)
-        exibir_tabuleiro(); // mostra o tabuleiro
-        turno_jogador((rodada % 2 == 1) ? 1 : 2); // alterna entre jogador 1 e 2
-        printf("\nPressione ENTER para continuar...\n");
-        tecla = getch(); // aguarda o ENTER para continuar
-        rodada++;        // Proxima rodada
-    } while (tecla == 13); // continua enquanto a tecla for ENTER (codigo ASCII 13)
+        if (i % 2 == 1)
+            printf("Casa %d: Movendo na diagonal\n", i); // Alterna entre movimentos
+        else
+            printf("Casa %d: Movendo em linha reta\n", i);
+        i++;
+    } while (i <= casas);
+    printf("\n");
+}
+// RAINHA - Movimento Recursivo Alternado
+void moverRainhaRecursivo(int passo, int max) {
+    if (passo > max) {
+        printf("\n");
+        return;
+    }
+    if (passo % 2 == 1)
+        printf("Rainha - Casa %d: Movendo na diagonal\n", passo);
+    else
+        printf("Rainha - Casa %d: Movendo em linha reta\n", passo);
+
+    moverRainhaRecursivo(passo + 1, max);
+}
+
+// ------------------- CAVALO -------------------
+void moverCavalo() {
+    printf("Movimento do Cavalo (duas casas para cima, uma para direita):\n");
+
+    int movimentosDesejados = 3;
+    int movimentosFeitos = 0;
+
+    for (int i = 0; i < 10; i++) { // simula tentativas de movimentos
+        for (int j = 0; j < 10; j++) {
+            // Condição para simular uma posição válida
+            if ((i + j) % 3 == 0) {
+                movimentosFeitos++;
+                printf("Movimento %d:\n", movimentosFeitos);
+                int passo = 1;
+
+                while (passo <= 2) {
+                    printf("  Passo %d: Movendo uma casa para cima\n", passo);
+                    passo++;
+                }
+
+                printf("  Passo 3: Movendo uma casa para a direita\n");
+
+                if (movimentosFeitos >= movimentosDesejados)
+                    break;
+            } else {
+                continue; // ignora posições inválidas
+            }
+        }
+        if (movimentosFeitos >= movimentosDesejados)
+            break;
+    }
+    printf("\n");
+}
+
+// ------------------- MAIN -------------------
+int main() {
+    int casas = 5; // número de passos a serem simulados para Torre, Bispo e Rainha
+
+    printf("=== Simulação de Movimentos de Peças de Xadrez ===\n\n");
+
+    moverTorreRecursivo(1, casas);
+    moverBispoDiagonalRecursivo(1, casas);
+    moverRainhaRecursivo(1, casas);
+    moverCavalo();
 
     return 0;
 }
-
-
